@@ -1,0 +1,38 @@
+version: '3.5'
+
+networks:
+  mi-network:
+    driver: bridge
+    name: miRed
+    ipam:
+      config:
+        - subnet: 10.5.0.0/24
+          gateway: 10.5.0.1
+
+services:
+  db:
+    image: mariadb:10.8.3
+    container_name: mariaDB1
+    restart: always
+    #volumes:
+    #  - ./volumenes/mariaDBData:/var/lib/mysql:rw
+    environment:      
+      - MARIADB_ROOT_PASSWORD=Password.02
+      - MARIADB_USER=computos
+      - MARIADB_PASSWORD=Password.02
+      - MARIADB_DATABASE=Pruebas
+      - TZ=America/Montevideo
+    ports:
+      - 3308:3306
+    networks:
+      mi-network:
+        ipv4_address: 10.5.0.2
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      mi-network:
+        ipv4_address: 10.5.0.3
